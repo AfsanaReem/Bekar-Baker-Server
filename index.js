@@ -14,27 +14,25 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        const serviceCollection = client.db("Bekar'sBaker").collection("Menu");
-        const reviewCollection = client.db("Bekar'sBaker").collection('reviews');
+        const MenuCollection = client.db("Bekar'sBakerDb").collection("Menu");
+        const reviewCollection = client.db("Bekar'sBakerDb").collection('reviews');
 
-        app.get('/Menu', async (req, res) => {
+        app.get('/Menu3', async (req, res) => {
             const query = {};
-            const sort = { date: -1 };
             const limit = 3;
-            const cursor = serviceCollection.find(query).limit(limit).sort(sort);
+            const cursor = MenuCollection.find(query).limit(limit);
             const services = await cursor.toArray();
             res.send(services);
         });
-        app.post('/jwt', (req, res) => {
-            const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
-            res.send({ token })
-        })
-        app.get('/allservices', async (req, res) => {
+        // app.post('/jwt', (req, res) => {
+        //     const user = req.body;
+        //     const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
+        //     res.send({ token })
+        // })
+        app.get('/Menu', async (req, res) => {
             const query = {};
-            const sort = { date: -1 };
             const limit = 0;
-            const cursor = serviceCollection.find(query).limit(limit).sort(sort);
+            const cursor = MenuCollection.find(query).limit(limit);
             const services = await cursor.toArray();
             res.send(services);
         });
@@ -89,11 +87,11 @@ async function run() {
             res.send(result);
         });
 
-        app.post('/services', async (req, res) => {
-            const newService = req.body;
-            const result = await serviceCollection.insertOne(newService);
-            res.send(result);
-        })
+        // app.post('/services', async (req, res) => {
+        //     const newService = req.body;
+        //     const result = await serviceCollection.insertOne(newService);
+        //     res.send(result);
+        // })
 
         app.post('/reviews', async (req, res) => {
             const newReview = req.body;
